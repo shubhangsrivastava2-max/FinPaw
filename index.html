@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinPaw — AI Investing Companion</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e7eaf0;--accent:#635bff;--accent2:#16a394;--good:#12805c;--warn:#b7791f;--bad:#c24141;--shadow:0 10px 30px rgba(20,30,55,.07)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select{font:inherit}button{cursor:pointer;border:0}
+.app{display:flex;min-height:100vh}.side{width:245px;background:#111827;color:#fff;padding:24px 16px;position:fixed;height:100vh}
+.brand{font-size:25px;font-weight:800;padding:8px 12px 28px}.brand span{font-size:29px}
+.nav button{display:block;width:100%;text-align:left;background:transparent;color:#cbd5e1;padding:13px 14px;border-radius:11px;margin:4px 0}.nav button.active,.nav button:hover{background:#242c3b;color:#fff}
+.main{margin-left:245px;width:calc(100% - 245px);padding:28px;max-width:1500px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.top h1{margin:0;font-size:28px}.pill{background:#eef0ff;color:#5148d8;padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}.span3{grid-column:span 3}
+.metric{font-size:29px;font-weight:800;margin:7px 0}.muted{color:var(--muted);font-size:13px}.positive{color:var(--good)}.warning{color:var(--warn)}.negative{color:var(--bad)}
+h2,h3{margin-top:0}.bar{height:9px;background:#edf0f5;border-radius:99px;overflow:hidden}.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#8c84ff)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}
+.btn{background:var(--accent);color:#fff;border-radius:10px;padding:10px 15px;font-weight:700}.btn.secondary{background:#eef0f6;color:#30384a}.btn.good{background:var(--accent2)}
+input,select{width:100%;border:1px solid #dfe3eb;border-radius:10px;padding:11px;background:#fff;color:var(--ink);outline:none}input:focus,select:focus{border-color:var(--accent)}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.stock-search{display:flex;gap:8px}.stock-search input{flex:1}.score{display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:#eef0ff;color:#5148d8;font-size:20px;font-weight:800}
+.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#f1f3f8;border:1px solid var(--line);padding:7px 10px;border-radius:999px;font-size:12px}
+.chat{height:440px;display:flex;flex-direction:column}.messages{flex:1;overflow:auto;padding-right:4px}.msg{max-width:78%;padding:12px 14px;border-radius:14px;margin:9px 0;line-height:1.45}.bot{background:#f0f2ff}.user{background:#111827;color:#fff;margin-left:auto}.chatbar{display:flex;gap:8px;margin-top:12px}.chatbar input{flex:1}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:12px}
+.hidden{display:none}.toast{position:fixed;right:25px;bottom:25px;background:#111827;color:#fff;padding:13px 17px;border-radius:12px;opacity:0;transform:translateY(10px);transition:.2s}.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:900px){.side{width:72px}.brand{font-size:0;text-align:center}.brand span{font-size:28px}.nav button{font-size:0;text-align:center}.nav button::first-letter{font-size:20px}.main{margin-left:72px;width:calc(100% - 72px);padding:18px}.span8,.span6,.span4,.span3{grid-column:span 12}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><span>🐾</span> FinPaw</div>
+  <div class="nav">
+    <button class="active" onclick="show('dashboard',this)">🏠 Dashboard</button>
+    <button onclick="show('stocks',this)">📈 Stock Lab</button>
+    <button onclick="show('goals',this)">🎯 Goals</button>
+    <button onclick="show('portfolio',this)">💼 Portfolio</button>
+    <button onclick="show('strategy',this)">🧠 Strategy</button>
+    <button onclick="show('chat',this)">🤖 Ask FinPaw</button>
+  </div>
+</aside>
+
+<main class="main">
+<section id="dashboard" class="page">
+<div class="top"><div><h1>Good evening, investor 🐾</h1><div class="muted">Your personal investment command centre.</div></div><div class="pill">Demo mode • Educational</div></div>
+<div class="grid">
+<div class="card span3"><div class="muted">Portfolio value</div><div class="metric">₹8,42,500</div><div class="positive">+₹4,230 today</div></div>
+<div class="card span3"><div class="muted">Portfolio health</div><div class="metric">8.1/10</div><div class="positive">Healthy diversification</div></div>
+<div class="card span3"><div class="muted">Monthly SIP</div><div class="metric">₹25,000</div><div class="muted">Next contribution in 12 days</div></div>
+<div class="card span3"><div class="muted">Risk profile</div><div class="metric">Moderate</div><div class="muted">Long-term horizon</div></div>
+
+<div class="card span8"><h2>Goal progress</h2><div class="row"><div><b>Long-term wealth</b><div class="muted">₹1 crore target • 15 years</div></div><b>34%</b></div><div class="bar"><div class="fill" style="width:34%"></div></div><div style="height:14px"></div><div class="row"><div><b>Education fund</b><div class="muted">₹20 lakh target • 8 years</div></div><b>21%</b></div><div class="bar"><div class="fill" style="width:21%"></div></div></div>
+
+<div class="card span4"><h2>FinPaw insight 🐱</h2><p>Your portfolio is tilted toward large caps, which fits a moderate long-term profile. Review sector concentration before adding more.</p><button class="btn" onclick="show('chat')">Ask why →</button></div>
+
+<div class="card span12"><h2>Allocation snapshot</h2><div class="grid">
+<div class="span3"><div class="muted">Large Cap</div><div class="metric">60%</div><div class="bar"><div class="fill" style="width:60%"></div></div></div>
+<div class="span3"><div class="muted">Mid Cap</div><div class="metric">25%</div><div class="bar"><div class="fill" style="width:25%"></div></div></div>
+<div class="span3"><div class="muted">Small Cap</div><div class="metric">10%</div><div class="bar"><div class="fill" style="width:10%"></div></div></div>
+<div class="span3"><div class="muted">Cash/Debt</div><div class="metric">5%</div><div class="bar"><div class="fill" style="width:5%"></div></div></div>
+</div></div>
+</div></section>
+
+<section id="stocks" class="page hidden">
+<div class="top"><div><h1>Stock Lab 📈</h1><div class="muted">Research companies without turning into a Telegram guru.</div></div></div>
+<div class="card"><div class="stock-search"><input id="stockInput" placeholder="Try TCS, INFY, RELIANCE, HDFCBANK..." value="TCS"><button class="btn" onclick="analyze()">Analyze</button></div></div>
+<div style="height:18px"></div>
+<div class="grid">
+<div class="card span8" id="stockResult"><h2>TCS — Analysis</h2><div class="row"><div><b>Fundamentals</b><div class="muted">Profitability, growth and balance-sheet quality</div></div><div class="score">8.8</div></div><div class="row"><div><b>Growth</b><div class="muted">Long-term business growth potential</div></div><div class="score">8.0</div></div><div class="row"><div><b>Valuation</b><div class="muted">Relative to historical/peer context</div></div><div class="score">6.8</div></div><div class="row"><div><b>Risk</b><div class="muted">Lower score means more risk</div></div><div class="score">3.2</div></div><h3 style="margin-top:18px">FinPaw interpretation</h3><p>TCS appears fundamentally strong in this demo dataset, while valuation deserves attention. A strong company is not automatically a good buy at every price.</p><div class="chips"><span class="chip">Large Cap</span><span class="chip">IT Services</span><span class="chip">Quality</span><span class="chip">Long-term candidate</span></div></div>
+<div class="card span4"><h2>Suitability</h2><div class="score" style="margin:5px auto 15px">8.2</div><p class="muted">Example score based on the demo investor profile.</p><div class="row"><span>Goal fit</span><b class="positive">Strong</b></div><div class="row"><span>Risk fit</span><b class="positive">Good</b></div><div class="row"><span>Valuation</span><b class="warning">Watch</b></div><div class="row"><span>Concentration</span><b>Check portfolio</b></div></div>
+</div></section>
+
+<section id="goals" class="page hidden">
+<div class="top"><div><h1>Goal Planner 🎯</h1><div class="muted">Turn a target into a contribution plan.</div></div></div>
+<div class="grid">
+<div class="card span6"><h2>Create a goal</h2><div class="formgrid">
+<div class="field"><label>Target amount (₹)</label><input id="target" type="number" value="10000000"></div>
+<div class="field"><label>Years</label><input id="years" type="number" value="15"></div>
+<div class="field"><label>Current investment (₹)</label><input id="current" type="number" value="500000"></div>
+<div class="field"><label>Illustrative annual return (%)</label><input id="return" type="number" value="10"></div>
+</div><button class="btn" style="margin-top:16px" onclick="goalCalc()">Calculate</button></div>
+<div class="card span6"><h2>Plan</h2><div class="metric" id="sipOut">₹0/month</div><div class="muted">Illustrative SIP required to reach the target under the assumptions.</div><div id="goalNote" style="margin-top:14px"></div></div>
+</div></section>
+
+<section id="portfolio" class="page hidden">
+<div class="top"><div><h1>Portfolio 💼</h1><div class="muted">A demo portfolio view. Connect a data provider later.</div></div><button class="btn" onclick="toast('Portfolio refresh queued 🐾')">Refresh</button></div>
+<div class="card"><table><thead><tr><th>Asset</th><th>Category</th><th>Value</th><th>Weight</th><th>FinPaw note</th></tr></thead><tbody>
+<tr><td><b>TCS</b></td><td>Large Cap</td><td>₹2,10,000</td><td>25%</td><td class="positive">Quality</td></tr>
+<tr><td><b>HDFC Bank</b></td><td>Large Cap</td><td>₹1,68,500</td><td>20%</td><td class="positive">Core holding</td></tr>
+<tr><td><b>INFY</b></td><td>Large Cap</td><td>₹1,26,000</td><td>15%</td><td class="warning">Sector overlap</td></tr>
+<tr><td><b>Mid-cap basket</b></td><td>Mid Cap</td><td>₹2,10,000</td><td>25%</td><td>Growth exposure</td></tr>
+<tr><td><b>Small-cap basket</b></td><td>Small Cap</td><td>₹84,250</td><td>10%</td><td class="warning">Higher volatility</td></tr>
+<tr><td><b>Cash</b></td><td>Cash</td><td>₹43,750</td><td>5%</td><td class="positive">Liquidity</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="strategy" class="page hidden">
+<div class="top"><div><h1>Strategy 🧠</h1><div class="muted">SIP, lump sum and allocation decisions.</div></div></div>
+<div class="grid">
+<div class="card span4"><h2>SIP</h2><p>Good fit for regular income and disciplined investing. It doesn't remove market risk.</p><button class="btn" onclick="toast('SIP strategy selected')">Use SIP scenario</button></div>
+<div class="card span4"><h2>Lump sum</h2><p>Can suit a long horizon and available capital, but exposes more money to market timing immediately.</p><button class="btn secondary" onclick="toast('Lump-sum scenario selected')">Compare</button></div>
+<div class="card span4"><h2>Hybrid</h2><p>Deploy part now and stagger the rest when the investor values a smoother entry.</p><button class="btn good" onclick="toast('Hybrid scenario selected')">Explore</button></div>
+<div class="card span12"><h2>Illustrative allocation framework</h2><div class="row"><span>Large cap</span><b>60%</b></div><div class="row"><span>Mid cap</span><b>25%</b></div><div class="row"><span>Small cap</span><b>10%</b></div><div class="row"><span>Cash/debt</span><b>5%</b></div><p class="muted">This is demo data, not a recommendation. FinPaw's production engine should calculate allocations from the investor's profile and goals.</p></div>
+</div></section>
+
+<section id="chat" class="page hidden">
+<div class="top"><div><h1>Ask FinPaw 🤖🐾</h1><div class="muted">Conversational investing research assistant.</div></div></div>
+<div class="card chat"><div class="messages" id="messages">
+<div class="msg bot">🐾 Hi! I'm FinPaw. Ask me about a stock, your goals, SIP vs lump sum, portfolio diversification, or risk.</div>
+<div class="msg bot">Try: <b>“Analyse TCS for my long-term goal.”</b></div>
+</div><div class="chatbar"><input id="chatInput" placeholder="Ask FinPaw anything..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()">Send</button></div></div>
+</section>
+</main></div>
+<div class="toast" id="toast"></div>
+<script>
+const demo={TCS:{fund:8.8,growth:8,val:6.8,risk:3.2},INFY:{fund:8.5,growth:7.8,val:7.1,risk:3.5},RELIANCE:{fund:8.4,growth:8.5,val:6.9,risk:4.2},HDFCBANK:{fund:8.7,growth:7.5,val:7.2,risk:3.1}};
+function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+function analyze(){let s=document.getElementById('stockInput').value.trim().toUpperCase();let d=demo[s]||demo.TCS;document.getElementById('stockResult').innerHTML=`<h2>${s} — Analysis</h2><div class="row"><div><b>Fundamentals</b><div class="muted">Business and financial quality</div></div><div class="score">${d.fund}</div></div><div class="row"><div><b>Growth</b><div class="muted">Long-term growth potential</div></div><div class="score">${d.growth}</div></div><div class="row"><div><b>Valuation</b><div class="muted">Relative valuation context</div></div><div class="score">${d.val}</div></div><div class="row"><div><b>Risk</b><div class="muted">Lower score means more risk</div></div><div class="score">${d.risk}</div></div><h3 style="margin-top:18px">FinPaw interpretation</h3><p>${s==='TCS'?'Fundamentally strong in this demo dataset, with valuation worth monitoring.':'This demo company profile looks broadly healthy, but a production FinPaw must use live, licensed data before making any suitability assessment.'}</p><div class="chips"><span class="chip">Demo data</span><span class="chip">Research view</span><span class="chip">Not a guaranteed forecast</span></div>`;toast('Analysis updated 🐾')}
+function goalCalc(){let P=+document.getElementById('current').value||0,T=+document.getElementById('target').value||0,n=(+document.getElementById('years').value||1)*12,r=(+document.getElementById('return').value||0)/100/12;let fvP=P*Math.pow(1+r,n);let sip=r?Math.max(0,(T-fvP)*r/(Math.pow(1+r,n)-1)):Math.max(0,(T-P)/n);document.getElementById('sipOut').textContent='₹'+Math.round(sip).toLocaleString('en-IN')+'/month';document.getElementById('goalNote').innerHTML='<b>Important:</b> This is an illustrative scenario. Actual returns are uncertain and can be negative.'}
+function sendChat(){let input=document.getElementById('chatInput'),q=input.value.trim();if(!q)return;let m=document.getElementById('messages');m.innerHTML+=`<div class="msg user">${q.replace(/</g,'&lt;')}</div>`;input.value='';let a='I can help structure that. In production, I would retrieve current market and financial data first, then combine it with your investor profile and goal before giving a suitability analysis. 🐾';if(/sip|lump/i.test(q))a='SIP can provide disciplined periodic investing; lump sum invests available capital immediately. The better choice depends on cash flow, horizon, risk tolerance and the goal. I would compare both scenarios rather than declare one universally best.';if(/tcs|infosys|reliance|hdfc/i.test(q))a='I can analyse the company across fundamentals, growth, valuation, risk and portfolio fit. This MVP uses demo data; the production version should use a licensed live-data provider.';if(/small|mid|large/i.test(q))a='Large caps are generally more established, while mid and small caps can offer higher growth potential with higher volatility and business risk. Allocation should depend on your horizon and risk capacity.';setTimeout(()=>{m.innerHTML+=`<div class="msg bot">${a}</div>`;m.scrollTop=m.scrollHeight},350)}
+</script>
+</body></html>
