@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinPaw — Financial Planning Companion</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e7eaf0;--accent:#635bff;--accent2:#16a394;--good:#12805c;--warn:#b7791f;--bad:#c24141;--shadow:0 10px 30px rgba(20,30,55,.07)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select{font:inherit}button{cursor:pointer;border:0}
+.app{display:flex;min-height:100vh}.side{width:245px;background:#111827;color:#fff;padding:24px 16px;position:fixed;height:100vh;z-index:5}
+.brand{font-size:25px;font-weight:800;padding:8px 12px 28px}.brand span{font-size:29px}
+.nav button{display:block;width:100%;text-align:left;background:transparent;color:#cbd5e1;padding:13px 14px;border-radius:11px;margin:4px 0}.nav button.active,.nav button:hover{background:#242c3b;color:#fff}
+.main{margin-left:245px;width:calc(100% - 245px);padding:28px;max-width:1500px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.top h1{margin:0;font-size:28px}.pill{background:#eef0ff;color:#5148d8;padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}.span3{grid-column:span 3}
+.metric{font-size:29px;font-weight:800;margin:7px 0;overflow-wrap:anywhere}.muted{color:var(--muted);font-size:13px}.positive{color:var(--good)}.warning{color:var(--warn)}.negative{color:var(--bad)}
+h2,h3{margin-top:0}.bar{height:9px;background:#edf0f5;border-radius:99px;overflow:hidden}.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#8c84ff)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}
+.btn{background:var(--accent);color:#fff;border-radius:10px;padding:10px 15px;font-weight:700}.btn.secondary{background:#eef0f6;color:#30384a}.btn.good{background:var(--accent2)}.btn.danger{background:#fff0f0;color:var(--bad)}.btn.small{padding:7px 10px;font-size:12px}
+input,select{width:100%;border:1px solid #dfe3eb;border-radius:10px;padding:11px;background:#fff;color:var(--ink);outline:none}input:focus,select:focus{border-color:var(--accent)}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.stock-search{display:flex;gap:8px}.stock-search input{flex:1}.score{display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:#eef0ff;color:#5148d8;font-size:20px;font-weight:800}
+.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#f1f3f8;border:1px solid var(--line);padding:7px 10px;border-radius:999px;font-size:12px}
+.chat{height:440px;display:flex;flex-direction:column}.messages{flex:1;overflow:auto;padding-right:4px}.msg{max-width:85%;padding:12px 14px;border-radius:14px;margin:9px 0;line-height:1.45;white-space:pre-wrap}.bot{background:#f0f2ff}.user{background:#111827;color:#fff;margin-left:auto}.chatbar{display:flex;gap:8px;margin-top:12px}.chatbar input{flex:1}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:650px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:12px}.table-wrap{overflow-x:auto}
+.hidden{display:none}.toast{position:fixed;right:25px;bottom:25px;background:#111827;color:#fff;padding:13px 17px;border-radius:12px;opacity:0;transform:translateY(10px);transition:.2s;z-index:10;max-width:calc(100vw - 40px)}.toast.show{opacity:1;transform:translateY(0)}
+.note{background:#f7f8ff;border:1px solid #e5e7ff;border-radius:12px;padding:12px;color:#4b5265;font-size:13px;line-height:1.5;margin-top:12px}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}.result{background:#f8f9fc;border:1px solid var(--line);padding:14px;border-radius:12px}.result b{display:block;font-size:20px;margin-top:5px}
+.empty{text-align:center;color:var(--muted);padding:28px 10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+@media(max-width:900px){.side{width:72px;padding:18px 8px}.brand{font-size:0;text-align:center;padding-left:0;padding-right:0}.brand span{font-size:28px}.nav button{font-size:0;text-align:center;padding:13px 5px}.nav button::first-letter{font-size:20px}.main{margin-left:72px;width:calc(100% - 72px);padding:18px}.span8,.span6,.span4,.span3{grid-column:span 12}}
+@media(max-width:520px){.main{padding:13px}.top{align-items:flex-start;flex-direction:column}.top h1{font-size:23px}.formgrid,.result-grid{grid-template-columns:1fr}.card{padding:16px}.chat{height:500px}.stock-search{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><span>🐾</span> FinPaw</div>
+  <div class="nav">
+    <button class="active" onclick="show('dashboard',this)">🏠 Dashboard</button>
+    <button onclick="show('stocks',this)">📈 Stock Lab</button>
+    <button onclick="show('goals',this)">🎯 Goals</button>
+    <button onclick="show('portfolio',this)">💼 Portfolio</button>
+    <button onclick="show('strategy',this)">🧠 Strategy</button>
+    <button onclick="show('chat',this)">🤖 Ask FinPaw</button>
+  </div>
+</aside>
+<main class="main">
+<section id="dashboard" class="page">
+<div class="top"><div><h1>Good evening, investor 🐾</h1><div class="muted">Your personal investment command centre.</div></div><div class="pill">Manual data • Educational</div></div>
+<div class="grid">
+<div class="card span3"><div class="muted">Portfolio value</div><div class="metric" id="dashValue">₹0</div><div class="muted">Calculated from your holdings</div></div>
+<div class="card span3"><div class="muted">Total profit / loss</div><div class="metric" id="dashPL">₹0</div><div class="muted" id="dashReturn">0.00% return</div></div>
+<div class="card span3"><div class="muted">Monthly SIP plan</div><div class="metric" id="dashSip">Not set</div><div class="muted">Use the goal planner to calculate</div></div>
+<div class="card span3"><div class="muted">Holdings</div><div class="metric" id="dashCount">0</div><div class="muted">Manually entered assets</div></div>
+<div class="card span8"><h2>Portfolio snapshot</h2><div id="dashAllocation"><div class="empty">Add holdings in Portfolio to see your allocation.</div></div></div>
+<div class="card span4"><h2>FinPaw insight 🐱</h2><p id="dashInsight">Enter your holdings to calculate portfolio performance and allocation. No market prices are fetched automatically.</p><button class="btn" onclick="show('portfolio')">Manage portfolio →</button></div>
+<div class="card span12"><h2>Financial tools</h2><div class="chips"><span class="chip">SIP calculator</span><span class="chip">Lump-sum calculator</span><span class="chip">Goal planner</span><span class="chip">Portfolio P/L</span><span class="chip">Allocation analysis</span></div><p class="muted" style="margin-bottom:0">All outputs are calculated from the values you enter. Projections are mathematical illustrations, not guaranteed returns.</p></div>
+</div></section>
+
+<section id="stocks" class="page hidden">
+<div class="top"><div><h1>Stock Lab 📈</h1><div class="muted">Explore an illustrative company scoring model.</div></div></div>
+<div class="card"><div class="stock-search"><input id="stockInput" placeholder="Try TCS, INFY, RELIANCE, HDFCBANK..." value="TCS"><button class="btn" onclick="analyze()">Analyze</button></div><div class="note">This section uses a small illustrative sample dataset, not current company financial statements or live market data. Scores are examples only and should not be treated as research or investment advice.</div></div>
+<div style="height:18px"></div><div class="grid">
+<div class="card span8" id="stockResult"><h2>TCS — Illustrative analysis</h2><p class="muted">Select Analyze to view the sample scoring model.</p></div>
+<div class="card span4"><h2>About this model</h2><p>These example scores demonstrate how a company-analysis interface can be presented. Real analysis would require verified financial statements, valuation inputs and risk data.</p></div>
+</div></section>
+
+<section id="goals" class="page hidden">
+<div class="top"><div><h1>Goal Planner 🎯</h1><div class="muted">Calculate the monthly contribution needed for a target.</div></div></div>
+<div class="grid">
+<div class="card span6"><h2>Create a goal</h2><div class="formgrid">
+<div class="field"><label>Target amount (₹)</label><input id="target" type="number" min="1" step="any" value="10000000"></div>
+<div class="field"><label>Years</label><input id="years" type="number" min="0.0834" step="any" value="15"></div>
+<div class="field"><label>Current investment (₹)</label><input id="current" type="number" min="0" step="any" value="500000"></div>
+<div class="field"><label>Illustrative annual return (%)</label><input id="return" type="number" min="0" max="100" step="any" value="10"></div>
+</div><button class="btn" style="margin-top:16px" onclick="goalCalc()">Calculate goal plan</button><div class="note">Uses monthly compounding and assumes contributions are made at the end of each month. The return is an assumption, not a prediction.</div></div>
+<div class="card span6"><h2>Required plan</h2><div class="metric" id="sipOut">—</div><div class="muted">Required monthly SIP</div><div id="goalNote" style="margin-top:14px">Enter your goal assumptions and calculate.</div><div class="result-grid"><div class="result"><span class="muted">Future value of current investment</span><b id="goalCurrentFV">—</b></div><div class="result"><span class="muted">Remaining target gap</span><b id="goalGap">—</b></div></div></div>
+</div>
+</section>
+
+<section id="portfolio" class="page hidden">
+<div class="top"><div><h1>Portfolio 💼</h1><div class="muted">Enter your own holdings and prices. FinPaw calculates the totals.</div></div><button class="btn secondary" onclick="resetPortfolio()">Clear all</button></div>
+<div class="grid">
+<div class="card span4"><h2 id="holdingFormTitle">Add a holding</h2>
+<div class="field"><label>Asset / stock name</label><input id="assetName" maxlength="60" placeholder="e.g. TCS"></div>
+<div class="field" style="margin-top:12px"><label>Category</label><select id="assetCategory"><option>Large Cap</option><option>Mid Cap</option><option>Small Cap</option><option>Index Fund</option><option>Debt</option><option>Gold</option><option>Cash</option><option>Other</option></select></div>
+<div class="formgrid" style="margin-top:12px">
+<div class="field"><label>Quantity</label><input id="assetQty" type="number" min="0.000001" step="any" placeholder="10"></div>
+<div class="field"><label>Purchase price (₹/unit)</label><input id="assetBuy" type="number" min="0" step="any" placeholder="100"></div>
+<div class="field" style="grid-column:1/-1"><label>Current price (₹/unit)</label><input id="assetCurrent" type="number" min="0" step="any" placeholder="120"></div>
+</div>
+<div class="actions"><button class="btn" id="saveHoldingBtn" onclick="saveHolding()">Add holding</button><button class="btn secondary" onclick="cancelEdit()">Cancel</button></div>
+<div class="note">Prices are manually supplied by you. FinPaw does not verify them or fetch live market prices. Your entries are saved in this browser on this device.</div>
+</div>
+<div class="card span8"><h2>Portfolio summary</h2>
+<div class="result-grid">
+<div class="result"><span class="muted">Invested value</span><b id="investedTotal">₹0</b></div>
+<div class="result"><span class="muted">Current value</span><b id="currentTotal">₹0</b></div>
+<div class="result"><span class="muted">Profit / loss</span><b id="profitTotal">₹0</b></div>
+<div class="result"><span class="muted">Overall return</span><b id="returnTotal">0.00%</b></div>
+</div>
+<div class="table-wrap" style="margin-top:18px"><table><thead><tr><th>Asset</th><th>Category</th><th>Quantity</th><th>Invested</th><th>Current value</th><th>P/L</th><th>Weight</th><th>Actions</th></tr></thead><tbody id="holdingsBody"><tr><td colspan="8" class="empty">No holdings yet. Add your first asset.</td></tr></tbody></table></div>
+</div>
+<div class="card span12"><h2>Allocation by category</h2><div id="portfolioAllocation"><div class="empty">Allocation will appear after you add holdings.</div></div></div>
+</div></section>
+
+<section id="strategy" class="page hidden">
+<div class="top"><div><h1>Strategy 🧠</h1><div class="muted">Compare mathematically defined investment scenarios.</div></div></div>
+<div class="grid">
+<div class="card span6"><h2>Scenario inputs</h2><div class="formgrid">
+<div class="field"><label>Monthly SIP (₹)</label><input id="strategySip" type="number" min="0" step="any" value="10000"></div>
+<div class="field"><label>Lump sum (₹)</label><input id="strategyLump" type="number" min="0" step="any" value="120000"></div>
+<div class="field"><label>Annual assumed return (%)</label><input id="strategyRate" type="number" min="0" max="100" step="any" value="10"></div>
+<div class="field"><label>Duration (years)</label><input id="strategyYears" type="number" min="0.0834" step="any" value="10"></div>
+</div><button class="btn" style="margin-top:16px" onclick="compareStrategy()">Compare scenarios</button><div class="note">This compares a monthly SIP with a lump sum of the same total contribution (monthly SIP × number of months). It is a simplified mathematical comparison, not a forecast of market performance.</div></div>
+<div class="card span6"><h2>Comparison results</h2><div id="strategyResults"><div class="empty">Enter assumptions and compare to see calculated results.</div></div></div>
+<div class="card span12"><h2>How to interpret</h2><p>Under a constant assumed rate, the two approaches can produce different ending values because money is invested for different lengths of time. Actual markets do not deliver a constant return, and neither method guarantees a profit.</p></div>
+</div></section>
+
+<section id="chat" class="page hidden">
+<div class="top"><div><h1>Ask FinPaw 🤖🐾</h1><div class="muted">Educational finance helper with built-in explanations.</div></div></div>
+<div class="card chat"><div class="messages" id="messages">
+<div class="msg bot">🐾 Hi! I'm FinPaw. I can explain SIPs, compounding, portfolio returns, diversification and the calculations in this app.</div>
+<div class="msg bot">Try: “How is portfolio return calculated?” or “Explain SIP vs lump sum.”</div>
+</div><div class="chatbar"><input id="chatInput" placeholder="Ask FinPaw anything..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn" onclick="sendChat()">Send</button></div></div>
+<div class="note">This is a rule-based educational assistant, not a connected generative AI service. It does not provide personalized investment recommendations.</div>
+</section>
+</main></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const STORAGE_KEY='finpaw_holdings_v2';
+const sampleScores={TCS:{fund:8.8,growth:8.0,val:6.8,risk:3.2},INFY:{fund:8.5,growth:7.8,val:7.1,risk:3.5},RELIANCE:{fund:8.4,growth:8.5,val:6.9,risk:4.2},HDFCBANK:{fund:8.7,growth:7.5,val:7.2,risk:3.1}};
+let holdings=loadHoldings();
+let editingId=null;
+const money=n=>'₹'+(Number.isFinite(n)?n:0).toLocaleString('en-IN',{maximumFractionDigits:2});
+const number=n=>(Number.isFinite(n)?n:0).toLocaleString('en-IN',{maximumFractionDigits:2});
+const safeNum=id=>{const el=document.getElementById(id);return el?Number(el.value):NaN;};
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function loadHoldings(){try{const parsed=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(parsed)?parsed.filter(x=>x&&typeof x.name==='string'&&Number.isFinite(x.qty)&&Number.isFinite(x.buy)&&Number.isFinite(x.current)&&x.qty>0&&x.buy>=0&&x.current>=0):[];}catch(e){return [];}}
+function persistHoldings(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(holdings));}catch(e){toast('Could not save in this browser. Check storage settings.');}}
+function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const page=document.getElementById(id);if(page)page.classList.remove('hidden');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');if(id==='portfolio')renderPortfolio();if(id==='dashboard')renderDashboard();}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>x.classList.remove('show'),2400);}
+function fmtSigned(n){return (n>0?'+':n<0?'−':'')+money(Math.abs(n));}
+function getPortfolioTotals(){let invested=0,current=0;for(const h of holdings){invested+=h.qty*h.buy;current+=h.qty*h.current;}const pl=current-invested;return {invested,current,pl,returnPct:invested>0?pl/invested*100:0};}
+function allocationHTML(){const total=getPortfolioTotals().current;if(!holdings.length||total<=0)return '<div class="empty">Add holdings with a current value above zero to see allocation.</div>';const groups={};holdings.forEach(h=>groups[h.category]=(groups[h.category]||0)+h.qty*h.current);return Object.entries(groups).sort((a,b)=>b[1]-a[1]).map(([name,value])=>{const pct=value/total*100;return `<div class="row"><div style="flex:1"><b>${escapeHTML(name)}</b><div class="bar" style="margin-top:7px"><div class="fill" style="width:${Math.min(100,pct)}%"></div></div></div><b>${pct.toFixed(2)}%</b><span class="muted">${money(value)}</span></div>`;}).join('');}
+function renderDashboard(){const t=getPortfolioTotals();document.getElementById('dashValue').textContent=money(t.current);document.getElementById('dashPL').textContent=fmtSigned(t.pl);document.getElementById('dashPL').className='metric '+(t.pl>0?'positive':t.pl<0?'negative':'');document.getElementById('dashReturn').textContent=t.returnPct.toFixed(2)+'% overall return';document.getElementById('dashCount').textContent=String(holdings.length);document.getElementById('dashAllocation').innerHTML=allocationHTML();document.getElementById('dashInsight').textContent=holdings.length?`You have ${holdings.length} manually entered holding(s). Your current calculated return is ${t.returnPct.toFixed(2)}%. Review the category allocation and make sure your manually entered prices are up to date.`:'Enter your holdings in Portfolio to calculate your portfolio value, profit/loss and allocation.';}
+function renderPortfolio(){const t=getPortfolioTotals();document.getElementById('investedTotal').textContent=money(t.invested);document.getElementById('currentTotal').textContent=money(t.current);const plEl=document.getElementById('profitTotal');plEl.textContent=fmtSigned(t.pl);plEl.className=t.pl>0?'positive':t.pl<0?'negative':'';const rEl=document.getElementById('returnTotal');rEl.textContent=t.returnPct.toFixed(2)+'%';rEl.className=t.returnPct>0?'positive':t.returnPct<0?'negative':'';const body=document.getElementById('holdingsBody');if(!holdings.length){body.innerHTML='<tr><td colspan="8" class="empty">No holdings yet. Add your first asset.</td></tr>';}else{body.innerHTML=holdings.map(h=>{const inv=h.qty*h.buy,cur=h.qty*h.current,pl=cur-inv,weight=t.current>0?cur/t.current*100:0;return `<tr><td><b>${escapeHTML(h.name)}</b></td><td>${escapeHTML(h.category)}</td><td>${number(h.qty)}</td><td>${money(inv)}</td><td>${money(cur)}</td><td class="${pl>0?'positive':pl<0?'negative':''}">${fmtSigned(pl)}</td><td>${weight.toFixed(2)}%</td><td><button class="btn secondary small" onclick="editHolding('${h.id}')">Edit</button> <button class="btn danger small" onclick="deleteHolding('${h.id}')">Delete</button></td></tr>`;}).join('');}document.getElementById('portfolioAllocation').innerHTML=allocationHTML();renderDashboard();}
+function clearHoldingFields(){['assetName','assetQty','assetBuy','assetCurrent'].forEach(id=>document.getElementById(id).value='');document.getElementById('assetCategory').value='Large Cap';}
+function cancelEdit(){editingId=null;clearHoldingFields();document.getElementById('holdingFormTitle').textContent='Add a holding';document.getElementById('saveHoldingBtn').textContent='Add holding';}
+function saveHolding(){const name=document.getElementById('assetName').value.trim(),category=document.getElementById('assetCategory').value,qty=safeNum('assetQty'),buy=safeNum('assetBuy'),current=safeNum('assetCurrent');if(!name){toast('Enter an asset name.');return;}if(!Number.isFinite(qty)||qty<=0||!Number.isFinite(buy)||buy<0||!Number.isFinite(current)||current<0){toast('Enter a quantity above zero and valid non-negative prices.');return;}const item={id:editingId||('h'+Date.now()+Math.random().toString(16).slice(2)),name,category,qty,buy,current};if(editingId){holdings=holdings.map(h=>h.id===editingId?item:h);toast('Holding updated.');}else{holdings.push(item);toast('Holding added.');}persistHoldings();cancelEdit();renderPortfolio();}
+function editHolding(id){const h=holdings.find(x=>x.id===id);if(!h)return;editingId=id;document.getElementById('assetName').value=h.name;document.getElementById('assetCategory').value=h.category;document.getElementById('assetQty').value=h.qty;document.getElementById('assetBuy').value=h.buy;document.getElementById('assetCurrent').value=h.current;document.getElementById('holdingFormTitle').textContent='Edit holding';document.getElementById('saveHoldingBtn').textContent='Save changes';document.getElementById('assetName').focus();}
+function deleteHolding(id){const h=holdings.find(x=>x.id===id);if(!h)return;if(!confirm('Delete '+h.name+' from this portfolio?'))return;holdings=holdings.filter(x=>x.id!==id);persistHoldings();if(editingId===id)cancelEdit();renderPortfolio();toast('Holding deleted.');}
+function resetPortfolio(){if(!holdings.length){toast('Portfolio is already empty.');return;}if(!confirm('Delete all manually entered holdings from this browser?'))return;holdings=[];persistHoldings();cancelEdit();renderPortfolio();toast('Portfolio cleared.');}
+function validProjectionInputs(principal,annualRate,months){return Number.isFinite(principal)&&principal>=0&&Number.isFinite(annualRate)&&annualRate>=0&&annualRate<=100&&Number.isFinite(months)&&months>0&&months<=1200;}
+function futureValueLump(principal,annualRate,years){const monthlyRate=annualRate/100/12;return principal*Math.pow(1+monthlyRate,years*12);}
+function futureValueSIP(payment,annualRate,months){const r=annualRate/100/12;if(r===0)return payment*months;return payment*(Math.pow(1+r,months)-1)/r;}
+function goalCalc(){const target=safeNum('target'),years=safeNum('years'),current=safeNum('current'),rate=safeNum('return'),months=Math.round(years*12);if(!Number.isFinite(target)||target<=0||!Number.isFinite(years)||years<=0||!Number.isFinite(current)||current<0||!Number.isFinite(rate)||rate<0||rate>100||months<1||months>1200){toast('Check the goal inputs. Values must be valid and the duration at most 100 years.');return;}const currentFV=futureValueLump(current,rate,months),gap=Math.max(0,target-currentFV),r=rate/1200;let sip;if(gap===0)sip=0;else if(r===0)sip=gap/months;else sip=gap*r/(Math.pow(1+r,months)-1);document.getElementById('sipOut').textContent=money(sip)+'/month';document.getElementById('goalCurrentFV').textContent=money(currentFV);document.getElementById('goalGap').textContent=money(gap);document.getElementById('goalNote').textContent=gap===0?'Your current investment is projected to reach or exceed the target under these assumptions.':`Estimated total SIP contributions: ${money(sip*months)}. Projected value combines the current investment and monthly contributions.`;}
+function analyze(){const s=document.getElementById('stockInput').value.trim().toUpperCase();if(!s){toast('Enter a company symbol.');return;}const d=sampleScores[s];const el=document.getElementById('stockResult');if(!d){el.innerHTML=`<h2>${escapeHTML(s)} — No sample available</h2><p>The illustrative dataset currently contains TCS, INFY, RELIANCE and HDFCBANK only. No real company data was retrieved.</p>`;return;}el.innerHTML=`<h2>${escapeHTML(s)} — Illustrative analysis</h2>${[['Fundamentals',d.fund],['Growth',d.growth],['Valuation',d.val],['Risk (higher = more risk)',d.risk]].map(([label,value])=>`<div class="row"><b>${label}</b><div class="score">${value.toFixed(1)}</div></div>`).join('')}<div class="note">These are illustrative sample scores, not measured company fundamentals, current valuation or investment advice.</div>`;toast('Sample analysis displayed.');}
+function compareStrategy(){const sip=safeNum('strategySip'),lump=safeNum('strategyLump'),rate=safeNum('strategyRate'),years=safeNum('strategyYears'),months=Math.round(years*12);if(!Number.isFinite(sip)||sip<0||!Number.isFinite(lump)||lump<0||!Number.isFinite(rate)||rate<0||rate>100||!Number.isFinite(years)||years<=0||months<1||months>1200){toast('Check the strategy inputs.');return;}const total=sip*months,sipFV=futureValueSIP(sip,rate,months),lumpFV=futureValueLump(total,rate,years),lumpInput=lump,enteredLumpFV=futureValueLump(lumpInput,rate,years);document.getElementById('strategyResults').innerHTML=`<div class="result-grid"><div class="result"><span class="muted">Total SIP contributions</span><b>${money(total)}</b></div><div class="result"><span class="muted">SIP projected value</span><b>${money(sipFV)}</b></div><div class="result"><span class="muted">Same-total lump sum value</span><b>${money(lumpFV)}</b></div><div class="result"><span class="muted">Entered lump sum value</span><b>${money(enteredLumpFV)}</b></div></div><p class="muted">The same-total comparison invests ₹${number(total)} through SIP versus that full amount at the start. The separately entered lump sum of ${money(lumpInput)} is shown for reference.</p>`;}
+function sendChat(){const input=document.getElementById('chatInput'),q=input.value.trim();if(!q)return;const m=document.getElementById('messages');const user=document.createElement('div');user.className='msg user';user.textContent=q;m.appendChild(user);input.value='';const lower=q.toLowerCase();let answer='I can explain the app’s basic financial concepts. Try asking about SIP, lump sum, compounding, portfolio return, profit/loss or diversification.';if(/sip/.test(lower))answer='A SIP invests a fixed amount at regular intervals. In this app, the projected future value uses monthly compounding: P × [((1+r)^n − 1) / r], where r is the assumed monthly rate and n is the number of contributions. It is an illustration, not a guaranteed return.';if(/lump|compound/.test(lower))answer='A lump-sum projection uses FV = PV × (1 + r)^n. FinPaw converts the annual assumed rate into a monthly rate and compounds it over the selected number of months. Actual investment returns vary.';if(/profit|loss|return|portfolio/.test(lower))answer='For each holding, invested value = quantity × purchase price; current value = quantity × current price. Portfolio profit/loss = total current value − total invested value. Return percentage = profit/loss ÷ total invested value × 100. Prices must be entered and updated manually.';if(/diversif|allocat|category/.test(lower))answer='Allocation weight for a category = current value of that category ÷ total current portfolio value × 100. Diversification spreads exposure, but does not eliminate investment risk.';if(/goal/.test(lower))answer='The goal planner first compounds your current investment, subtracts that projected amount from the target, then calculates the monthly SIP needed to fill the remaining gap under the assumed return.';const bot=document.createElement('div');bot.className='msg bot';bot.textContent=answer;m.appendChild(bot);m.scrollTop=m.scrollHeight;}
+renderPortfolio();
+goalCalc();
+compareStrategy();
+</script>
+</body>
+</html>
